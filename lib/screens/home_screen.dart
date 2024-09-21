@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.sport == 'football') {
-        Provider.of<FootballProvider>(context, listen: false).fetchFootballMatches('39'); // Premier League ID
+        Provider.of<FootballProvider>(context, listen: false).fetchFootballLeagues(); // Cambia aquí
       } else if (widget.sport == 'basketball') {
         Provider.of<BasketballProvider>(context, listen: false).fetchBasketballGames();
       } else if (widget.sport == 'formula1') {
@@ -37,45 +37,48 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
         if (widget.sport == 'football')
-         Expanded(
-          child: Consumer<FootballProvider>(
-            builder: (context, footballProvider, child) {
-              if (footballProvider.loading) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (footballProvider.matches.isEmpty) {
-                return Center(child: Text('No hay partidos disponibles.'));
-              }
-              return ListView.builder(
-                itemCount: footballProvider.matches.length,
-                itemBuilder: (context, index) {
-                  final match = footballProvider.matches[index];
-                  return ListTile(
-                    title: Text('${match['teams']['home']['name']} vs ${match['teams']['away']['name']}'),
-                    subtitle: Text('Marcador: ${match['goals']['home'] ?? 0} - ${match['goals']['away'] ?? 0}'),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-          if (widget.sport == 'basketball')
-            Expanded(
-              child: Consumer<BasketballProvider>(builder: (context, basketballProvider, child) {
-                if (basketballProvider.loading) {
+          Expanded(
+            child: Consumer<FootballProvider>(
+              builder: (context, footballProvider, child) {
+                if (footballProvider.loading) {
                   return Center(child: CircularProgressIndicator());
                 }
+                if (footballProvider.leagues.isEmpty) {
+                  return Center(child: Text('No hay ligas disponibles.'));
+                }
                 return ListView.builder(
-                  itemCount: basketballProvider.games.length,
+                  itemCount: footballProvider.leagues.length,
                   itemBuilder: (context, index) {
-                    final game = basketballProvider.games[index];
+                    final league = footballProvider.leagues[index];
                     return ListTile(
-                      title: Text('${game}'),
+                      title: Text(league['league']['name']),
+                      subtitle: Text(league['country']['name']),
+                      leading: Image.network(league['league']['logo']),
                     );
                   },
                 );
-              }),
+              },
             ),
+          ),
+        if (widget.sport == 'basketball')
+          Expanded(
+            child: Consumer<BasketballProvider>(builder: (context, basketballProvider, child) {
+              if (basketballProvider.loading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return ListView.builder(
+                itemCount: basketballProvider.games.length,
+                itemBuilder: (context, index) {
+                  final game = basketballProvider.games[index];
+                  return ListTile(
+                    title: Text('${game['teams']['home']['name']} vs ${game['teams']['away']['name']}'), // Cambia según la estructura
+                    subtitle: Text('Marcador: ${game['goals']['home']} - ${game['goals']['away']}'), // Asegúrate de que estas claves existan
+                  );
+                },
+              );
+            }),
+          ),
+
           if (widget.sport == 'formula1')
             Expanded(
               child: Consumer<Formula1Provider>(builder: (context, formula1Provider, child) {

@@ -11,8 +11,10 @@ class BasketballProvider with ChangeNotifier {
       loading = true;
       notifyListeners();
       
-      final response = await http.get(Uri.parse('https://v2.nba.api-sports.io/leagues'));
-      
+      // Cambiar la URL al endpoint correcto para obtener juegos en vivo
+      final response = await http.get(Uri.parse('https://v2.nba.api-sports.io/games?live=all'), 
+          headers: {'x-apisports-key': 'TU_API_KEY'});
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         games = data['response']; // Asegúrate de que esto coincida con la estructura de tu respuesta

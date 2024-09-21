@@ -1,24 +1,23 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../services/football_service.dart';
 
 class FootballProvider with ChangeNotifier {
-  List<dynamic> _matches = [];
+  List<dynamic> _leagues = [];
   bool _loading = false;
 
-  List<dynamic> get matches => _matches;
+  List<dynamic> get leagues => _leagues;
   bool get loading => _loading;
 
   final FootballService _footballService = FootballService();
 
-  Future<void> fetchFootballMatches(String leagueId) async {
+  Future<void> fetchFootballLeagues() async {
     _loading = true;
     notifyListeners();
 
     try {
-      _matches = await _footballService.fetchFootballMatches(leagueId);
+      _leagues = await _footballService.fetchFootballLeagues();
     } catch (error) {
-      print('Error al cargar partidos: $error');
-      _matches = []; // Asegúrate de que _matches se vacíe en caso de error
+      print(error);
     } finally {
       _loading = false;
       notifyListeners();
