@@ -10,7 +10,7 @@ class Formula1Service {
     final response = await http.get(
       Uri.parse('$baseUrl/races?season=2024'),
       headers: {
-        'x-apisports-key': apiKey,  // Aquí es donde debes poner tu API Key
+        'x-apisports-key': apiKey,
       },
     );
 

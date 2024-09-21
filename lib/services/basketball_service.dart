@@ -6,11 +6,11 @@ class BasketballService {
   final String baseUrl = 'v2.nba.api-sports.io';
 
   Future<List<dynamic>> fetchBasketballGames() async {
-    // Asegúrate de reemplazar YOUR_LEAGUE_ID y YOUR_SEASON_YEAR con valores válidos
+    
     final response = await http.get(
       Uri.parse('https://v2.nba.api-sports.io/leagues'),
       headers: {
-        'x-apisports-key': apiKey,  // Aquí es donde debes poner tu API Key
+        'x-apisports-key': apiKey,
       },
     );
 
