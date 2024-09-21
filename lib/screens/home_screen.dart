@@ -36,24 +36,29 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          if (widget.sport == 'football')
-            Expanded(
-              child: Consumer<FootballProvider>(builder: (context, footballProvider, child) {
-                if (footballProvider.loading) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return ListView.builder(
-                  itemCount: footballProvider.matches.length,
-                  itemBuilder: (context, index) {
-                    final match = footballProvider.matches[index];
-                    return ListTile(
-                      title: Text('${match['teams']['home']['name']} vs ${match['teams']['away']['name']}'),
-                      subtitle: Text('Marcador: ${match['goals']['home']} - ${match['goals']['away']}'),
-                    );
-                  },
-                );
-              }),
-            ),
+        if (widget.sport == 'football')
+         Expanded(
+          child: Consumer<FootballProvider>(
+            builder: (context, footballProvider, child) {
+              if (footballProvider.loading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (footballProvider.matches.isEmpty) {
+                return Center(child: Text('No hay partidos disponibles.'));
+              }
+              return ListView.builder(
+                itemCount: footballProvider.matches.length,
+                itemBuilder: (context, index) {
+                  final match = footballProvider.matches[index];
+                  return ListTile(
+                    title: Text('${match['teams']['home']['name']} vs ${match['teams']['away']['name']}'),
+                    subtitle: Text('Marcador: ${match['goals']['home'] ?? 0} - ${match['goals']['away'] ?? 0}'),
+                  );
+                },
+              );
+            },
+          ),
+        ),
           if (widget.sport == 'basketball')
             Expanded(
               child: Consumer<BasketballProvider>(builder: (context, basketballProvider, child) {

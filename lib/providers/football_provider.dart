@@ -17,13 +17,11 @@ class FootballProvider with ChangeNotifier {
     try {
       _matches = await _footballService.fetchFootballMatches(leagueId);
     } catch (error) {
-      print(error);
+      print('Error al cargar partidos: $error');
+      _matches = []; // Asegúrate de que _matches se vacíe en caso de error
     } finally {
       _loading = false;
-      // Asegúrate de que notifyListeners() se llama después de que se complete la construcción actual.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
+      notifyListeners();
     }
   }
 }

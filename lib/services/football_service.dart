@@ -16,7 +16,7 @@ class FootballService {
     if (response.statusCode == 200) {
       return json.decode(response.body)['response'];
     } else {
-      throw Exception('Error al cargar los partidos de fútbol');
+      throw Exception('Error al cargar los partidos de fútbol: ${response.body}');
     }
   }
 }
