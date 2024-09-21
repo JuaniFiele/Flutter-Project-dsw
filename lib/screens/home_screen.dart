@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final game = basketballProvider.games[index];
                     return ListTile(
-                      title: Text('${game['teams']['home']['name']} vs ${game['teams']['away']['name']}'),
+                      title: Text('${game}'),
                     );
                   },
                 );
@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final race = formula1Provider.races[index];
                     return ListTile(
-                      title: Text('Carrera: ${race['race']['name']}'),
+                      title: Text('Carrera: ${race['name']} - ${race['location']['city']}, ${race['location']['country']}'),
                     );
                   },
                 );
