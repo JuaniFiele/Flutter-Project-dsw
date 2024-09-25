@@ -25,9 +25,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Deportes en Vivo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+          bodyLarge: TextStyle(fontSize: 16, color: Colors.black),
+        ),
+        appBarTheme: AppBarTheme(
+          color: Colors.deepPurple,
+          titleTextStyle: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       ),
-      home: SportSelectionScreen(), // Cambia aquí para mostrar el menú principal
+      home: SportSelectionScreen(),
     );
   }
 }
