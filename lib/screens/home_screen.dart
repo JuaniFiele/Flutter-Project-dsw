@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.sport == 'football') {
-        Provider.of<FootballProvider>(context, listen: false).fetchFootballLeagues();
+        Provider.of<FootballProvider>(context, listen: false).fetchFootballFixtures('UTC'); // Aquí pasas el timezone
       } else if (widget.sport == 'basketball') {
         Provider.of<BasketballProvider>(context, listen: false).fetchBasketballGames();
       } else if (widget.sport == 'formula1') {
@@ -41,10 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple, // Color del AppBar
+        backgroundColor: Colors.deepPurple,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0), // Padding general
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             if (widget.sport == 'football')
@@ -54,18 +54,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (footballProvider.loading) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    if (footballProvider.leagues.isEmpty) {
+                    if (footballProvider.fixtures.isEmpty) {
                       return Center(
                         child: Text(
-                          'No hay ligas disponibles.',
+                          'No hay partidos disponibles para hoy.',
                           style: TextStyle(fontSize: 18, color: Colors.red),
                         ),
                       );
                     }
                     return ListView.builder(
-                      itemCount: footballProvider.leagues.length,
+                      itemCount: footballProvider.fixtures.length,
                       itemBuilder: (context, index) {
-                        final league = footballProvider.leagues[index];
+                        final fixture = footballProvider.fixtures[index];
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -73,17 +73,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundImage: NetworkImage(league['league']['logo']),
+                              backgroundImage: NetworkImage(
+                                fixture['league']['logo'] ?? 'default_logo_url',
+                              ),
                               radius: 25,
                             ),
                             title: Text(
-                              league['league']['name'],
+                              '${fixture['teams']['home']['name']} vs ${fixture['teams']['away']['name']}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text(league['country']['name']),
+                            subtitle: Text('Fecha: ${fixture['fixture']['date']}'),
                             trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
                           ),
                         );
@@ -95,62 +97,64 @@ class _HomeScreenState extends State<HomeScreen> {
             if (widget.sport == 'basketball')
               Expanded(
                 child: Consumer<BasketballProvider>(
-                    builder: (context, basketballProvider, child) {
-                  if (basketballProvider.loading) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  return ListView.builder(
-                    itemCount: basketballProvider.games.length,
-                    itemBuilder: (context, index) {
-                      final game = basketballProvider.games[index];
-                      return Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            '${game['teams']['home']['name']} vs ${game['teams']['away']['name']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                  builder: (context, basketballProvider, child) {
+                    if (basketballProvider.loading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      itemCount: basketballProvider.games.length,
+                      itemBuilder: (context, index) {
+                        final game = basketballProvider.games[index];
+                        return Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          subtitle: Text(
-                            'Marcador: ${game['goals']['home']} - ${game['goals']['away']}',
+                          child: ListTile(
+                            title: Text(
+                              '${game['teams']['home']['name']} vs ${game['teams']['away']['name']}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              'Marcador: ${game['goals']['home']} - ${game['goals']['away']}',
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             if (widget.sport == 'formula1')
               Expanded(
                 child: Consumer<Formula1Provider>(
-                    builder: (context, formula1Provider, child) {
-                  if (formula1Provider.loading) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  return ListView.builder(
-                    itemCount: formula1Provider.races.length,
-                    itemBuilder: (context, index) {
-                      final race = formula1Provider.races[index];
-                      return Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            'Carrera: ${race['name']}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                  builder: (context, formula1Provider, child) {
+                    if (formula1Provider.loading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return ListView.builder(
+                      itemCount: formula1Provider.races.length,
+                      itemBuilder: (context, index) {
+                        final race = formula1Provider.races[index];
+                        return Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          subtitle: Text(
-                            '${race['location']['city']}, ${race['location']['country']}',
+                          child: ListTile(
+                            title: Text(
+                              'Carrera: ${race['name']}',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              '${race['location']['city']}, ${race['location']['country']}',
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
           ],
         ),

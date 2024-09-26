@@ -2,20 +2,20 @@ import 'package:flutter/foundation.dart';
 import '../services/football_service.dart';
 
 class FootballProvider with ChangeNotifier {
-  List<dynamic> _leagues = [];
+  List<dynamic> _fixtures = [];
   bool _loading = false;
 
-  List<dynamic> get leagues => _leagues;
+  List<dynamic> get fixtures => _fixtures;
   bool get loading => _loading;
 
   final FootballService _footballService = FootballService();
 
-  Future<void> fetchFootballLeagues() async {
+  Future<void> fetchFootballFixtures(String timezone) async {
     _loading = true;
     notifyListeners();
 
     try {
-      _leagues = await _footballService.fetchFootballLeagues();
+      _fixtures = await _footballService.fetchFootballFixtures(timezone);
     } catch (error) {
       print(error);
     } finally {
