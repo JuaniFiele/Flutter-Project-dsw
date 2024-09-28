@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/football_provider.dart';
+import '../providers/league_provider.dart';
 import '../providers/basketball_provider.dart';
 import '../providers/formula1_provider.dart';
 
@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.sport == 'football') {
-        Provider.of<FootballProvider>(context, listen: false).fetchFootballFixtures('UTC'); // Aquí pasas el timezone
+        Provider.of<LeagueProvider>(context, listen: false).fetchFootballLeagues();
       } else if (widget.sport == 'basketball') {
         Provider.of<BasketballProvider>(context, listen: false).fetchBasketballGames();
       } else if (widget.sport == 'formula1') {
@@ -49,23 +49,23 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             if (widget.sport == 'football')
               Expanded(
-                child: Consumer<FootballProvider>(
-                  builder: (context, footballProvider, child) {
-                    if (footballProvider.loading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (footballProvider.fixtures.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No hay partidos disponibles para hoy.',
-                          style: TextStyle(fontSize: 18, color: Colors.red),
-                        ),
-                      );
-                    }
-                    return ListView.builder(
-                      itemCount: footballProvider.fixtures.length,
-                      itemBuilder: (context, index) {
-                        final fixture = footballProvider.fixtures[index];
+                child: Consumer<LeagueProvider>(builder: (context, leagueProvider, child) {
+                  if (leagueProvider.loading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (leagueProvider.leagues.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No se encontraron ligas.',
+                        style: TextStyle(fontSize: 18, color: Colors.red),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: leagueProvider.leagues.length,
+                    itemBuilder: (context, index) {
+                      final league = leagueProvider.leagues[index];
+                      if (league is Map<String, dynamic>) {  // Verificación de tipo
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -74,37 +74,54 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                fixture['league']['logo'] ?? 'default_logo_url',
+                                league['league']['logo'] ?? 'https://example.com/default_logo.png', // URL del logo por defecto
                               ),
                               radius: 25,
                             ),
                             title: Text(
-                              '${fixture['teams']['home']['name']} vs ${fixture['teams']['away']['name']}',
+                              '${league['league']['name']}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text('Fecha: ${fixture['fixture']['date']}'),
+                            subtitle: Text('${league['country']['name']}'),
                             trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/live_screen',
+                                arguments: {
+                                  'leagueId': league['league']['id'],
+                                  'leagueName': league['league']['name'],
+                                },
+                              );
+                            },
                           ),
                         );
-                      },
-                    );
-                  },
-                ),
+                      } else {
+                        return Center(
+                          child: Text(
+                            'Error en los datos de la liga.',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }),
               ),
             if (widget.sport == 'basketball')
               Expanded(
-                child: Consumer<BasketballProvider>(
-                  builder: (context, basketballProvider, child) {
-                    if (basketballProvider.loading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                      itemCount: basketballProvider.games.length,
-                      itemBuilder: (context, index) {
-                        final game = basketballProvider.games[index];
+                child: Consumer<BasketballProvider>(builder: (context, basketballProvider, child) {
+                  if (basketballProvider.loading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                    itemCount: basketballProvider.games.length,
+                    itemBuilder: (context, index) {
+                      final game = basketballProvider.games[index];
+                      if (game is Map<String, dynamic>) {  // Verificación de tipo
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -120,22 +137,29 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      },
-                    );
-                  },
-                ),
+                      } else {
+                        return Center(
+                          child: Text(
+                            'Error en los datos del partido.',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }),
               ),
             if (widget.sport == 'formula1')
               Expanded(
-                child: Consumer<Formula1Provider>(
-                  builder: (context, formula1Provider, child) {
-                    if (formula1Provider.loading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    return ListView.builder(
-                      itemCount: formula1Provider.races.length,
-                      itemBuilder: (context, index) {
-                        final race = formula1Provider.races[index];
+                child: Consumer<Formula1Provider>(builder: (context, formula1Provider, child) {
+                  if (formula1Provider.loading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                    itemCount: formula1Provider.races.length,
+                    itemBuilder: (context, index) {
+                      final race = formula1Provider.races[index];
+                      if (race is Map<String, dynamic>) {  // Verificación de tipo
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -151,10 +175,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         );
-                      },
-                    );
-                  },
-                ),
+                      } else {
+                        return Center(
+                          child: Text(
+                            'Error en los datos de la carrera.',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                }),
               ),
           ],
         ),

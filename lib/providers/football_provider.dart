@@ -2,22 +2,31 @@ import 'package:flutter/foundation.dart';
 import '../services/football_service.dart';
 
 class FootballProvider with ChangeNotifier {
-  List<dynamic> _fixtures = [];
+  List<Map<String, dynamic>> _fixtures = [];
   bool _loading = false;
-
-  List<dynamic> get fixtures => _fixtures;
-  bool get loading => _loading;
-
   final FootballService _footballService = FootballService();
 
-  Future<void> fetchFootballFixtures(String timezone) async {
+  List<Map<String, dynamic>> get fixtures => _fixtures;
+  bool get loading => _loading;
+
+  Future<void> fetchFootballFixtures(int leagueId) async {
     _loading = true;
     notifyListeners();
 
     try {
-      _fixtures = await _footballService.fetchFootballFixtures(timezone);
+      // Llamada al servicio
+      List<Map<String, dynamic>> fetchedFixtures = await _footballService.fetchFootballFixtures(leagueId);
+      
+      if (fetchedFixtures.isNotEmpty) {
+        _fixtures = fetchedFixtures.map((fixture) => fixture as Map<String, dynamic>).toList();
+        print('Fixtures obtenidos: $_fixtures');
+      } else {
+        print('No se encontraron partidos para la liga y fecha seleccionada.');
+        _fixtures = [];
+      }
     } catch (error) {
-      print(error);
+      print('Error al cargar los partidos: $error');
+      _fixtures = [];
     } finally {
       _loading = false;
       notifyListeners();
