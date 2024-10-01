@@ -88,7 +88,6 @@ class _LiveScreenState extends State<LiveScreen> {
                           subtitle: Text('Fecha: ${fixture['fixture']['date']}'),
                           trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
                           onTap: () {
-                            // Puedes agregar lógica aquí si deseas navegar a detalles del partido
                           },
                         ),
                       );
