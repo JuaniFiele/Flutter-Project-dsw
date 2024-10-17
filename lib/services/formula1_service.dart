@@ -11,7 +11,7 @@ class Formula1Service {
         Uri.parse(baseUrl),
         headers: {
           'x-rapidapi-key': apiKey,
-          'x-rapidapi-host': 'v1.formula-1.api-sports.io',  // Agrega si es necesario
+          'x-rapidapi-host': 'v1.formula-1.api-sports.io',
         },
       );
 
