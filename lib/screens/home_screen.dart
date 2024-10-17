@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: leagueProvider.leagues.length,
                     itemBuilder: (context, index) {
                       final league = leagueProvider.leagues[index];
-                      if (league is Map<String, dynamic>) {  // Verificación de tipo
+                      if (league is Map<String, dynamic>) { 
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -74,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                league['league']['logo'] ?? 'https://example.com/default_logo.png', // URL del logo por defecto
+                                league['league']['logo'] ?? 'https://example.com/default_logo.png',
                               ),
                               radius: 25,
                             ),
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: basketballProvider.games.length,
                     itemBuilder: (context, index) {
                       final game = basketballProvider.games[index];
-                      if (game is Map<String, dynamic>) {  // Verificación de tipo
+                      if (game is Map<String, dynamic>) {  
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: formula1Provider.races.length,
                     itemBuilder: (context, index) {
                       final race = formula1Provider.races[index];
-                      if (race is Map<String, dynamic>) {  // Verificación de tipo
+                      if (race is Map<String, dynamic>) { 
                         return Card(
                           elevation: 5,
                           shape: RoundedRectangleBorder(
