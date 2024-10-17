@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import './providers/football_provider.dart';
 import './providers/basketball_provider.dart';
 import './providers/formula1_provider.dart';
-import './providers/league_provider.dart'; // Asegúrate de importar LeagueProvider
+import './providers/league_provider.dart';
 import './screens/home_screen.dart';
 import './screens/sport_selection_screen.dart';
-import './screens/live_screen.dart'; // Importa LiveScreen
+import './screens/live_screen.dart';
 
 void main() {
   runApp(
@@ -15,7 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => FootballProvider()),
         ChangeNotifierProvider(create: (_) => BasketballProvider()),
         ChangeNotifierProvider(create: (_) => Formula1Provider()),
-        ChangeNotifierProvider(create: (_) => LeagueProvider()), // Incluye LeagueProvider aquí
+        ChangeNotifierProvider(create: (_) => LeagueProvider()),
       ],
       child: MyApp(),
     ),
