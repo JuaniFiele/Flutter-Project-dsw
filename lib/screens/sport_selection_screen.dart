@@ -35,7 +35,7 @@ class SportSelectionScreen extends StatelessWidget {
         width: 250,
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
-          color: Colors.deepPurpleAccent, // Fondo del recuadro
+          color: Colors.deepPurpleAccent,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
