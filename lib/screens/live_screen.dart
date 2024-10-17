@@ -17,7 +17,6 @@ class _LiveScreenState extends State<LiveScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Llamar a la API con la fecha específica (ya se maneja en el provider)
       Provider.of<FootballProvider>(context, listen: false)
           .fetchFootballFixtures(widget.leagueId);
     });
@@ -49,8 +48,8 @@ class _LiveScreenState extends State<LiveScreen> {
                     return Center(child: CircularProgressIndicator());
                   }
 
-                  // Verificar si hay datos de fixtures
-                  print('Fixtures obtenidos: ${footballProvider.fixtures}'); // Imprimir los fixtures
+                  
+                  print('Fixtures obtenidos: ${footballProvider.fixtures}'); 
 
                   if (footballProvider.fixtures.isEmpty) {
                     return Center(
@@ -61,7 +60,7 @@ class _LiveScreenState extends State<LiveScreen> {
                     );
                   }
 
-                  // Mostrar los partidos directamente sin filtrar por fecha
+                 
                   return ListView.builder(
                     itemCount: footballProvider.fixtures.length,
                     itemBuilder: (context, index) {
