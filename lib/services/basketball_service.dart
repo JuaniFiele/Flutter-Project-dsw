@@ -7,7 +7,7 @@ class BasketballService {
 
   Future<List<dynamic>> fetchLiveBasketballGames() async {
     final response = await http.get(
-      Uri.parse('$baseUrl/games?live=all'), // Cambiar a este endpoint
+      Uri.parse('$baseUrl/games?live=all'),
       headers: {
         'x-apisports-key': apiKey,
       },
