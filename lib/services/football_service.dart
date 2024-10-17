@@ -7,7 +7,6 @@ class FootballService {
 
   Future<List<Map<String, dynamic>>> fetchFootballFixtures(int leagueId) async {
 
-    // Crea la solicitud a la API para obtener partidos de hoy en la liga seleccionada
     final response = await http.get(
       Uri.parse('$baseUrl/fixtures?league=$leagueId&from=2022-12-18&to=2022-12-18&season=2022'),
       headers: {
