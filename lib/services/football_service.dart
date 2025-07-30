@@ -8,7 +8,7 @@ class FootballService {
   Future<List<Map<String, dynamic>>> fetchFootballFixtures(int leagueId) async {
 
     final response = await http.get(
-      Uri.parse('$baseUrl/fixtures?league=$leagueId&from=2022-12-18&to=2022-12-18&season=2022'),
+      Uri.parse('$baseUrl/fixtures?league=$leagueId&from=2022-10-23&to=2022-10-23&season=2022'),
       headers: {
         'x-apisports-key': apiKey,
       },
